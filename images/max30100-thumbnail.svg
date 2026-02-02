@@ -1,0 +1,165 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d4a6f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a2942;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Raspberry Pi Board (Left side) -->
+  <g transform="translate(100, 200)">
+    <!-- PCB Base -->
+    <rect x="0" y="0" width="260" height="190" rx="8" fill="#2d7a3e" stroke="#1a5028" stroke-width="3"/>
+    
+    <!-- Corner mounting holes -->
+    <circle cx="18" cy="18" r="7" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="242" cy="18" r="7" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="18" cy="172" r="7" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="242" cy="172" r="7" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    
+    <!-- SoC Chip (Broadcom) -->
+    <rect x="95" y="60" width="85" height="85" rx="3" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
+    <text x="137" y="100" font-family="monospace" font-size="11" fill="#666666" text-anchor="middle">Broadcom</text>
+    <text x="137" y="115" font-family="monospace" font-size="10" fill="#666666" text-anchor="middle">BCM2837</text>
+    
+    <!-- GPIO Header (40-pin) on RIGHT side -->
+    <g transform="translate(235, 30)">
+      <rect x="0" y="0" width="20" height="130" fill="#1a1a1a" stroke="#000" stroke-width="1"/>
+      <!-- Pin rows -->
+      <rect x="3" y="3" width="7" height="124" fill="#555"/>
+      <rect x="11" y="3" width="7" height="124" fill="#555"/>
+      
+      <!-- GPIO Pins (I2C pins highlighted) -->
+      <!-- Pin 1: 3.3V (Red) -->
+      <rect x="11" y="4" width="7" height="3" fill="#ff3333" id="gpio-vcc"/>
+      <!-- Pin 3: SDA (Blue) -->
+      <rect x="11" y="12" width="7" height="3" fill="#3399ff" id="gpio-sda"/>
+      <!-- Pin 5: SCL (Green) -->
+      <rect x="11" y="20" width="7" height="3" fill="#33ff66" id="gpio-scl"/>
+      <!-- Pin 7: GPIO4 (Yellow for INT) -->
+      <rect x="11" y="28" width="7" height="3" fill="#ffcc33" id="gpio-int"/>
+      <!-- Pin 9: GND (Black) -->
+      <rect x="11" y="36" width="7" height="3" fill="#555555" id="gpio-gnd"/>
+    </g>
+    
+    <!-- USB Ports -->
+    <rect x="5" y="45" width="40" height="22" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+    <rect x="5" y="75" width="40" height="22" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+    <rect x="10" y="49" width="30" height="14" fill="#1a1a1a"/>
+    <rect x="10" y="79" width="30" height="14" fill="#1a1a1a"/>
+    
+    <!-- Ethernet Port -->
+    <rect x="5" y="110" width="40" height="30" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+    <rect x="10" y="115" width="30" height="20" fill="#1a1a1a"/>
+    <line x1="13" y1="118" x2="13" y2="132" stroke="#ffa500" stroke-width="1.5"/>
+    <line x1="36" y1="118" x2="36" y2="132" stroke="#00ff00" stroke-width="1.5"/>
+    
+    <!-- SD Card slot -->
+    <rect x="50" y="-10" width="50" height="15" fill="#1a1a1a" stroke="#000" stroke-width="1"/>
+    
+    <!-- HDMI Port -->
+    <rect x="185" y="185" width="35" height="15" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+    <rect x="188" y="188" width="29" height="9" fill="#1a1a1a"/>
+    
+    <!-- Micro USB Power -->
+    <rect x="150" y="185" width="25" height="15" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+    <rect x="153" y="188" width="19" height="9" fill="#1a1a1a"/>
+    
+    <!-- Power LED -->
+    <circle cx="25" cy="165" r="4" fill="#ff0000" opacity="0.9"/>
+    <circle cx="25" cy="165" r="7" fill="#ff0000" opacity="0.3"/>
+    
+    <!-- Activity LED -->
+    <circle cx="40" cy="165" r="4" fill="#00ff00" opacity="0.9"/>
+    <circle cx="40" cy="165" r="7" fill="#00ff00" opacity="0.3"/>
+    
+    <!-- Capacitors and components -->
+    <rect x="210" y="65" width="10" height="15" fill="#3d2817"/>
+    <rect x="210" y="90" width="10" height="15" fill="#3d2817"/>
+    <rect x="210" y="115" width="10" height="15" fill="#3d2817"/>
+    <rect x="60" y="25" width="12" height="8" fill="#d4af37"/>
+    <rect x="70" y="25" width="8" height="12" fill="#3d2817"/>
+  </g>
+  
+  <!-- MAX30100 Sensor Board (Right side) -->
+  <g transform="translate(520, 240)">
+    <!-- PCB Shadow -->
+    <rect x="3" y="3" width="160" height="110" rx="5" fill="#000000" opacity="0.3"/>
+    
+    <!-- PCB Base (Green) -->
+    <rect x="0" y="0" width="160" height="110" rx="5" fill="#2a7a4f" stroke="#1a5028" stroke-width="3"/>
+    
+    <!-- Mounting holes -->
+    <circle cx="12" cy="12" r="6" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="148" cy="12" r="6" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="12" cy="98" r="6" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    <circle cx="148" cy="98" r="6" fill="#d4d4d4" stroke="#999" stroke-width="1"/>
+    
+    <!-- MAX30100 IC Chip -->
+    <rect x="45" y="28" width="70" height="55" rx="2" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
+    <text x="80" y="52" font-family="monospace" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">MAX</text>
+    <text x="80" y="66" font-family="monospace" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">30100</text>
+    
+    <!-- Sensor window -->
+    <rect x="60" y="68" width="40" height="12" rx="2" fill="#0a0a0a"/>
+    
+    <!-- SMD Components -->
+    <rect x="18" y="35" width="14" height="7" rx="1" fill="#3d2817"/>
+    <rect x="18" y="50" width="14" height="7" rx="1" fill="#3d2817"/>
+    <rect x="18" y="65" width="14" height="7" rx="1" fill="#3d2817"/>
+    
+    <!-- Capacitors (yellow/gold) -->
+    <rect x="125" y="32" width="18" height="24" rx="1" fill="#d4af37" stroke="#a0892b" stroke-width="1"/>
+    <rect x="125" y="60" width="18" height="24" rx="1" fill="#d4af37" stroke="#a0892b" stroke-width="1"/>
+    
+    <!-- Small SMD components -->
+    <rect x="120" y="20" width="10" height="6" rx="1" fill="#404040"/>
+    <rect x="135" y="20" width="10" height="6" rx="1" fill="#404040"/>
+    
+    <!-- Pin header on LEFT side of sensor -->
+    <g transform="translate(-5, 20)">
+      <rect x="0" y="0" width="10" height="70" fill="#1a1a1a" stroke="#000" stroke-width="1"/>
+      <!-- 5 Pins vertically aligned -->
+      <!-- VIN -->
+      <circle cx="5" cy="7" r="3.5" fill="#c0c0c0" stroke="#999" stroke-width="0.5" id="pin-vin"/>
+      <!-- SCL -->
+      <circle cx="5" cy="21" r="3.5" fill="#c0c0c0" stroke="#999" stroke-width="0.5" id="pin-scl"/>
+      <!-- SDA -->
+      <circle cx="5" cy="35" r="3.5" fill="#c0c0c0" stroke="#999" stroke-width="0.5" id="pin-sda"/>
+      <!-- INT -->
+      <circle cx="5" cy="49" r="3.5" fill="#c0c0c0" stroke="#999" stroke-width="0.5" id="pin-int"/>
+      <!-- GND -->
+      <circle cx="5" cy="63" r="3.5" fill="#c0c0c0" stroke="#999" stroke-width="0.5" id="pin-gnd"/>
+    </g>
+  </g>
+  
+  <!-- I2C Connection Wires - from RPi GPIO (right side) to MAX30100 pins (left side) -->
+  <g filter="url(#glow)">
+    <!-- VCC: RPi Pin 1 (3.3V) to MAX30100 VIN -->
+    <path d="M 355 235.5 C 420 235, 460 250, 520 267" stroke="#ff3333" stroke-width="4" fill="none" stroke-linecap="round"/>
+    
+    <!-- SDA: RPi Pin 3 to MAX30100 SDA -->
+    <path d="M 355 243.5 C 420 250, 460 270, 520 295" stroke="#3399ff" stroke-width="4" fill="none" stroke-linecap="round"/>
+    
+    <!-- SCL: RPi Pin 5 to MAX30100 SCL -->
+    <path d="M 355 251.5 C 420 260, 460 275, 520 281" stroke="#33ff66" stroke-width="4" fill="none" stroke-linecap="round"/>
+    
+    <!-- INT: RPi GPIO4 (Pin 7) to MAX30100 INT -->
+    <path d="M 355 259.5 C 420 275, 460 295, 520 309" stroke="#ffcc33" stroke-width="4" fill="none" stroke-linecap="round"/>
+    
+    <!-- GND: RPi Pin 9 to MAX30100 GND -->
+    <path d="M 355 267.5 C 420 290, 460 310, 520 323" stroke="#555555" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

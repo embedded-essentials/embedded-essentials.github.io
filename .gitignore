@@ -1,0 +1,24 @@
+# Backup files
+*.backup
+*~
+
+# Test files
+test-*.html
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local

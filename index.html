@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <title>Embedded Essentials - A Developer's Journey</title>
+    <meta name="description" content="Exploring the depths of Linux kernel development, system programming, and open source contributions">
+    
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://api.countapi.xyz">
+    
+    <!-- Preconnect to critical origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <script>
+        // Apply saved theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Force immediate repaint
+            if (savedTheme === 'dark') {
+                document.documentElement.style.colorScheme = 'dark';
+            }
+        })();
+        
+        // Theme toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update color scheme
+            html.style.colorScheme = newTheme;
+            
+            // Update icon
+            const icon = document.getElementById('theme-toggle')?.querySelector('i');
+            if (icon) {
+                icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
+        
+        // Update icon on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const icon = document.getElementById('theme-toggle')?.querySelector('i');
+            if (icon) {
+                icon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Development Banner -->
+    <div class="dev-banner" style="position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg, #667eea, #764ba2); color: white; padding: 10px 0; text-align: center; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1001;">
+        <i class="fas fa-tools"></i> This website is under development, some features may not work!
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar" style="top: 40px;">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/embedded-essentials-logo.svg" alt="Embedded Essentials Logo" class="logo-svg">
+                <span>Embedded Essentials</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Linux Kernel</span> Development
+                </h1>
+                <p class="hero-subtitle">Exploring the depths of Linux Kernel, one commit at a time.</p>
+                <div class="hero-buttons">
+                    <a href="#blog" class="btn btn-primary">
+                        <i class="fas fa-book-open"></i>
+                        Read Blog
+                    </a>
+                    <a href="https://github.com" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <i class="fas fa-eye"></i>
+                    <div class="stat-content">
+                        <h3 id="visitor-count">0</h3>
+                        <p>Total Visitors</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-heart"></i>
+                    <div class="stat-content">
+                        <h3 id="total-likes">0</h3>
+                        <p>Total Likes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-newspaper"></i>
+                    <div class="stat-content">
+                        <h3>1</h3>
+                        <p>Blog Posts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <p>Scroll Down</p>
+        </div>
+    </section>
+
+    <!-- Featured Posts Section -->
+    <section class="blog-section" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Latest <span class="gradient-text">Articles</span></h2>
+                <p class="section-subtitle">Deep dives into Linux Kernel and Driver Development</p>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Kernel Mentorship Experience Blog Post -->
+                <article class="blog-card" data-post-id="mentorship" onclick="window.location.href='post/kernel-mentorship-experience.html';" style="cursor: pointer;">
+                    <div class="card-image">
+                        <img src="images/mentorship-thumbnail.png" alt="Kernel Mentorship">
+                        <div class="card-badge">
+                            <i class="fas fa-graduation-cap"></i>
+                            Blog #1
+                        </div>
+                        <div class="card-badge">
+                            <i class="fas fa-clock"></i>
+                            15 min read
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category">Kernel Mentorship</span>
+                            <span class="date">Nov 2025</span>
+                        </div>
+                        <h3 class="card-title">Linux Kernel Mentorship Experience</h3>
+                        <p class="card-description">
+                            Three months with the Linux Kernel Fall Unpaid 2025 program: contributing patches to IIO and Media subsystems, learning upstream development practices, and seeing code merged into mainline. A journey through Device Tree bindings, interrupt handling, and kernel development workflows.
+                        </p>
+                        <div class="card-footer">
+                            <div class="author">
+                                <div class="author-avatar">
+                                    <img src="images/avatar.jpg" alt="Shrikant Raskar" class="avatar-img">
+                                </div>
+                                <div class="author-info">
+                                    <span class="author-name">Shrikant Raskar</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="like-btn" onclick="event.stopPropagation();" data-post="mentorship">
+                                    <i class="far fa-heart"></i>
+                                    <span class="like-count">0</span>
+                                </button>
+                                <a href="post/kernel-mentorship-experience.html" class="read-more" onclick="event.stopPropagation();">
+                                    Read More
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">About <span class="gradient-text">This Blog</span></h2>
+                    <p>
+                        Welcome to Embedded Essentials, a technical blog dedicated to exploring the fascinating world of Linux kernel development. 
+                        Whether you're a beginner looking to make your first contribution or an experienced developer diving into kernel internals, 
+                        you'll find detailed guides, tutorials, and insights here.
+                    </p>
+                    <p>
+                        This blog covers everything from setting up your development environment to understanding complex subsystems like 
+                        Media, DRM & KMS, ALSA etc. and device drivers. Each article is written with clarity and depth, 
+                        backed by practical examples and real-world scenarios.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-code"></i>
+                            <h4>Practical Code</h4>
+                            <p>Real examples and working code snippets</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h4>In-Depth Learning</h4>
+                            <p>Deep dives into kernel concepts</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <h4>Community Driven</h4>
+                            <p>Learning and growing together</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="code-window">
+                        <div class="window-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="window-content">
+                            <pre><code><span class="keyword">#include</span> <span class="string">&lt;linux/module.h&gt;</span>
+<span class="keyword">#include</span> <span class="string">&lt;linux/kernel.h&gt;</span>
+
+<span class="keyword">static int</span> <span class="function">__init</span> hello_init(<span class="keyword">void</span>)
+{
+    printk(KERN_INFO <span class="string">"Welcome to Embedded Essentials !\n"</span>);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="keyword">static void</span> <span class="function">__exit</span> hello_exit(<span class="keyword">void</span>)
+{
+    printk(KERN_INFO <span class="string">"Thanks for visiting!\n"</span>);
+}
+
+module_init(hello_init);
+module_exit(hello_exit);
+
+MODULE_LICENSE(<span class="string">"GPL"</span>);
+MODULE_AUTHOR(<span class="string">"Shrikant Raskar"</span>);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In <span class="gradient-text">Touch</span></h2>
+                <p class="section-subtitle">Have questions or want to collaborate? Let's connect!</p>
+            </div>
+            <div class="contact-grid">
+                <a href="https://github.com" class="contact-card" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <h3>GitHub</h3>
+                    <p>Check out my repositories and contributions</p>
+                </a>
+                <a href="https://youtube.com" class="contact-card" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                    <h3>YouTube</h3>
+                    <p>Watch tutorials and tech content</p>
+                </a>
+                <a href="mailto:raskar.shree97@gmail.com" class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email</h3>
+                    <p>raskar.shree97@gmail.com</p>
+                </a>
+                <a href="https://in.linkedin.com/in/shrikant-raskar97" class="contact-card" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                    <h3>LinkedIn</h3>
+                    <p>Connect professionally</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/embedded-essentials-logo.svg" alt="Embedded Essentials Logo" class="logo-svg">
+                    <span>Embedded Essentials</span>
+                </div>
+                <p class="footer-text">
+                    Exploring the depths of Linux kernel development, one commit at a time.
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://in.linkedin.com/in/shrikant-raskar97" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:raskar.shree97@gmail.com"><i class="fas fa-envelope"></i></a>
+                </div>
+                <p class="copyright">
+                    &copy; 2026 Embedded Essentials. Built with passion for open source.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Kernel Mentorship Experience - Embedded Essentials</title>
+    
+    <!-- DNS Prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://api.countapi.xyz">
+    
+    <!-- Preconnect to critical origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <script>
+        // Apply saved theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Force immediate repaint
+            if (savedTheme === 'dark') {
+                document.documentElement.style.colorScheme = 'dark';
+            }
+        })();
+        
+        // Theme toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update color scheme
+            html.style.colorScheme = newTheme;
+            
+            // Update icon
+            const icon = document.getElementById('theme-toggle')?.querySelector('i');
+            if (icon) {
+                icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
+        
+        // Update icon on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const icon = document.getElementById('theme-toggle')?.querySelector('i');
+            if (icon) {
+                icon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../images/embedded-essentials-logo.svg" alt="Embedded Essentials Logo" class="logo-svg">
+                <span>Embedded Essentials</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="category">Kernel Mentorship</span>
+                <span class="read-time"><i class="fas fa-clock"></i> 15 min read</span>
+                <span class="visitor-count"><i class="fas fa-eye"></i> <span id="visitor-count">0</span> views</span>
+            </div>
+            <h1 class="post-title">Linux Kernel Mentorship Experience</h1>
+            <div class="post-info">
+                <div class="author-section">
+                    <div class="author-avatar">
+                        <img src="../images/avatar.jpg" alt="Shrikant Raskar" class="avatar-img">
+                    </div>
+                    <div class="author-details">
+                        <span class="author-name">Shrikant Raskar</span>
+                        <span class="post-date">February 1, 2026</span>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="like-btn-post" data-post="mentorship">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="share-btn">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="post-content">
+            <p class="lead">
+                In September 2025, I got the opportunity to join the <strong>Linux Kernel Fall Unpaid 2025</strong> mentorship program—a 
+                three-month journey that took my patches from local repositories to the mainline kernel. This is the 
+                story of contributing to the world's largest open-source project.
+            </p>
+
+            <h2 id="introduction">Introduction</h2>
+            <p>
+                The <strong>Linux Kernel Fall Unpaid 2025</strong> mentorship program (September - November 2025) provided 
+                structured guidance to contribute patches to the mainline kernel. Under the mentorship of <strong>Shuah Khan</strong> 
+                (Maintainer of Kernel Selftest, USB over IP, and cpupower tools), <strong>David Hunter</strong>, and <strong>Khalid Aziz</strong>, I worked 
+                on the IIO (Industrial I/O) and Media subsystems.
+            </p>
+
+            <p>
+                The program focused on upstream kernel development practices: working with mailing lists, responding to 
+                maintainer feedback, and following kernel coding standards. For anyone interested, check the 
+                <a href="https://mentorship.lfx.linuxfoundation.org/" target="_blank">LFX Mentorship portal</a> for 
+                upcoming sessions.
+            </p>
+
+            <h2 id="getting-started">Getting Started</h2>
+            <p>
+                The mentorship program began with a competitive selection process. After applying, prospective mentees completed 
+                pre-requisite tasks—including the LFD103 course (A Beginner's Guide to Linux Kernel Development) and documentation 
+                exercises—within a specified timeline. Based on these evaluations, a select group was accepted into the program.
+            </p>
+
+            <p>
+                Mentors conducted weekly meetings covering kernel exploration, commit message best practices, compiling and running 
+                selftests, and addressing mentee questions. Each mentee chose two subsystems to focus on. I initially selected Media 
+                and DRM, but lacking compatible camera and display hardware, I pivoted to IIO. With a Raspberry Pi 3 Model B, 
+                BeagleBone Black, and I2C sensors (MAX30100, RFD77402) available, I could test my patches.
+            </p>
+
+            <h2 id="contributions">Contributions</h2>
+
+            <p>
+                During the mentorship program, I successfully contributed 11 patches to the Linux kernel across the IIO (Industrial I/O) 
+                and Media subsystems. These contributions included driver enhancements, Device Tree binding updates, and code modernization 
+                efforts. All patches were merged into the mainline kernel.
+            </p>
+
+            <h3 id="max30100">MAX30100: Device Tree Pulse-Width Support</h3>
+            <p>
+                <strong>About the sensor:</strong> The MAX30100 is a pulse oximeter and heart-rate sensor that measures blood 
+                oxygen saturation (SpO₂) and heart rate using LED pulse measurements.
+            </p>
+            <p>
+                <strong>Problem:</strong> The driver (<code>drivers/iio/health/max30100.c</code>) had hardcoded LED pulse-width 
+                value (1600 μs) in the <code>max30100_chip_init()</code> function, preventing hardware designers from optimizing 
+                power consumption and measurement accuracy for their specific PCB layouts and use cases. The TODO comment indicated 
+                this feature was planned but not implemented.
+            </p>
+            <p>
+                <strong>Solution:</strong> Submitted a 2-patch series that:
+            </p>
+            <ul>
+                <li>Updated existing YAML Device Tree binding schema (<code>Documentation/devicetree/bindings/iio/health/maxim,max30100.yaml</code>) 
+                    by adding <code>maxim,pulse-width-us</code> property with enum validation for the four hardware-supported values 
+                    (200, 400, 800, 1600 μs)</li>
+                <li>Defined register bit macros <code>MAX30100_REG_SPO2_CONFIG_PW_MASK</code> using <code>GENMASK(1, 0)</code> and 
+                    pulse-width constants (<code>MAX30100_REG_SPO2_CONFIG_200US</code> through <code>MAX30100_REG_SPO2_CONFIG_1600US</code>) 
+                    for the four supported values</li>
+                <li>Implemented <code>max30100_get_pulse_width()</code> helper function with switch-case to convert microsecond values 
+                    to register bit patterns (0x0-0x3) with input validation</li>
+                <li>Modified <code>max30100_chip_init()</code> to read <code>"maxim,pulse-width-us"</code> property using 
+                    <code>device_property_read_u32()</code>, defaulting to 1600 μs for backward compatibility</li>
+                <li>Updated <code>MAX30100_REG_SPO2_CONFIG</code> register write to use <code>FIELD_PREP()</code> macro for setting 
+                    the configurable pulse-width bits, replacing the hardcoded value</li>
+            </ul>
+            <p>
+                <strong>Impact:</strong> Hardware integrators can now configure optimal LED pulse widths (200, 400, 800, or 1600 μs) 
+                directly in Device Tree without kernel modifications, enabling better power efficiency and measurement quality across 
+                different hardware platforms.
+            </ul>
+
+            <h3 id="rfd77402">RFD77402: Interrupt Support and Driver Improvements</h3>
+            <p>
+                <strong>About the sensor:</strong> The RFD77402 is a Time-of-Flight (ToF) distance sensor that measures distances 
+                up to 2 meters using infrared light, commonly used in robotics, automation, and gesture recognition.
+            </p>
+            <p>
+                <strong>Problem:</strong> The driver (<code>drivers/iio/proximity/rfd77402.c</code>) used a manual polling loop 
+                in <code>rfd77402_measure()</code> to check if measurements were ready, wasting power and CPU cycles. It also lacked 
+                Device Tree support, requiring hardcoded platform-specific configurations.
+            </p>
+            <p>
+                <strong>Solution:</strong> Developed an 8-patch series that:
+            </p>
+            <ul>
+                <li><strong>Device Tree bindings:</strong> Created comprehensive YAML schema 
+                    (<code>Documentation/devicetree/bindings/iio/proximity/rfdigital,rfd77402.yaml</code>) defining properties for 
+                    <code>reg</code> (I2C address), <code>interrupts</code> (optional GPIO IRQ), and <code>vdd-supply</code> (power regulator)</li>
+                <li><strong>OF device ID:</strong> Added <code>of_device_id</code> table with <code>"rfdigital,rfd77402"</code> compatible 
+                    string in <code>rfd77402_driver</code>, enabling automatic module loading when matched in Device Tree</li>
+                <li><strong>Polling timeout alignment:</strong> Adjusted timeout in <code>rfd77402_measure()</code> to match datasheet's 
+                    specified 100ms measurement cycle (10 retries × 10ms delays)</li>
+                <li><strong>Kernel helper adoption:</strong> Extracted polling logic into new <code>rfd77402_wait_for_result()</code> 
+                    function using <code>read_poll_timeout()</code> macro to replace manual <code>while</code> loop with 
+                    <code>msleep()</code> calls, improving code readability and reusability for future updates</li>
+                <li><strong>Devm-managed mutex:</strong> Replaced <code>mutex_init(&data->lock)</code> in <code>rfd77402_probe()</code> 
+                    with <code>devm_mutex_init(&client->dev, &data->lock)</code> for automatic cleanup on device unbind</li>
+                <li><strong>Code documentation:</strong> Added kernel-doc comments to <code>struct rfd77402_data</code> documenting the 
+                    <code>client</code>, <code>lock</code>, and <code>completion</code> (for interrupt) fields</li>
+                <li><strong>Interrupt handling:</strong> Added <code>rfd77402_request_irq()</code> helper calling 
+                    <code>devm_request_threaded_irq()</code> with <code>IRQF_TRIGGER_RISING | IRQF_ONESHOT</code> flags, implemented 
+                    <code>rfd77402_trigger_handler()</code> bottom-half using <code>complete()</code>, and modified 
+                    <code>rfd77402_measure()</code> to use <code>wait_for_completion_timeout()</code> when interrupt is available, 
+                    falling back to polling otherwise</li>
+            </ul>
+            <p>
+                <strong>Impact:</strong> Systems using this sensor now benefit from significantly reduced power consumption through 
+                interrupt-driven operation instead of continuous polling. Device Tree support enables platform-independent configuration, 
+                making the driver more portable across different embedded systems and eliminating the need for hardcoded platform data.
+            </ul>
+
+            <h3 id="saa6588">SAA6588: Debug Macro Modernization</h3>
+            <p>
+                <strong>About the component:</strong> The SAA6588 is an RDS (Radio Data System) decoder chip that extracts digital 
+                information like station names, song titles, and traffic alerts from FM radio broadcasts.
+            </p>
+            <p>
+                <strong>Problem:</strong> The driver (<code>drivers/media/i2c/saa6588.c</code>) used a custom <code>dprintk</code> 
+                debug macro with an unwrapped <code>if</code> statement that was flagged by <code>checkpatch.pl</code>. The macro 
+                pattern was outdated and inconsistent with V4L2 subsystem logging conventions.
+            </p>
+            <p>
+                <strong>Solution:</strong> Submitted a cleanup patch that:
+            </p>
+            <ul>
+                <li>Removed the custom <code>dprintk</code> macro definition (<code>if (debug) printk</code>) entirely instead of 
+                    just wrapping it</li>
+                <li>Replaced all <code>dprintk</code> invocations with V4L2's standard <code>v4l2_info()</code> helper function</li>
+                <li>Maintained existing debug level checks (<code>if (debug > 1)</code>, <code>if (debug > 2)</code>, etc.) to 
+                    preserve verbosity control via the <code>debug</code> module parameter</li>
+                <li>Removed the unused <code>PREFIX</code> macro (<code>"saa6588: "</code>) as <code>v4l2_info()</code> automatically 
+                    includes device identification</li>
+                <li>Updated all 13 logging call sites across functions like <code>block_from_buf()</code>, <code>block_to_buf()</code>, 
+                    <code>saa6588_i2c_poll()</code>, and <code>saa6588_configure()</code></li>
+            </ul>
+            <p>
+                <strong>Impact:</strong> The driver now uses V4L2 subsystem's standard logging infrastructure, providing consistent 
+                output formatting with other V4L2 drivers. Debugging remains controllable via the module parameter while following 
+                kernel coding standards and eliminating checkpatch warnings.
+            </p>
+
+            <h2 id="key-learnings">Key Learnings</h2>
+
+            <p><strong>Kernel Development:</strong></p>
+            <ul>
+                <li><strong>Device Tree bindings:</strong> Writing YAML schemas, validating bindings with <code>dt-schema</code>, 
+                    documenting hardware description properly</li>
+                <li><strong>IIO subsystem:</strong> Understanding IIO framework architecture, channels, buffers, triggers, and sysfs interfaces</li>
+                <li><strong>Interrupt handling:</strong> Requesting IRQs, threaded interrupts with top-half and bottom-half handlers, 
+                    interrupt flags (<code>IRQF_TRIGGER_*</code>, <code>IRQF_ONESHOT</code>), handling race conditions</li>
+                <li><strong>I2C protocol:</strong> I2C device communication, debugging bus issues with <code>i2c-tools</code></li>
+                <li><strong>Power management:</strong> Understanding runtime PM, system sleep, and power-aware driver design</li>
+                <li><strong>Kernel APIs:</strong> <code>devm_*</code> resource-managed APIs, <code>FIELD_GET/FIELD_PREP</code> for bit manipulation, 
+                    <code>read_poll_timeout()</code> for polling loops</li>
+            </ul>
+
+            <p><strong>Collaboration and Communication:</strong></p>
+            <ul>
+                <li><strong>Code review:</strong> Responding to maintainer feedback professionally, understanding review comments, iterating quickly</li>
+                <li><strong>Commit messages:</strong> Writing clear subject lines, detailed descriptions explaining "why", 
+                    using imperative mood, proper formatting</li>
+                <li><strong>Documentation:</strong> Kernel documentation style, writing helpful comments, updating Documentation/ tree</li>
+                <li><strong>Mailing list etiquette:</strong> Proper threading, not top-posting, trimming quotes, professional tone</li>
+                <li><strong>Testing discipline:</strong> Hardware validation before submission, 
+                    documenting test results in commit messages</li>
+            </ul>
+
+            <p><strong>Development Tools:</strong></p>
+            <ul>
+                <li><strong>Git workflow:</strong> Advanced patch management, interactive rebasing, <code>git format-patch</code>, 
+                    <code>git send-email</code>, maintaining patch series across review iterations</li>
+                <li><strong>Kernel scripts:</strong> <code>checkpatch.pl</code> for style validation, <code>scripts/get_maintainer.pl</code> 
+                    for finding reviewers</li>
+                <li><strong>Patch management:</strong> <code>b4</code> for mailing list workflows, applying and managing patch series from lore.kernel.org</li>
+                <li><strong>Device Tree validation:</strong> <code>dt-schema</code>, <code>dt-validate</code>, YAML schema writing and validation</li>
+                <li><strong>Email workflow:</strong> <code>git send-email</code> with proper threading, 
+                    cover letter generation, CC list management</li>
+            </ul>
+
+            <p><strong>Debugging and Testing:</strong></p>
+            <ul>
+                <li><strong>Kernel debugging:</strong> <code>gdb</code> with KGDB for kernel debugging, analyzing kernel crashes and oops messages</li>
+                <li><strong>Dynamic debugging:</strong> Using <code>CONFIG_DYNAMIC_DEBUG</code>, <code>pr_debug()</code>, <code>dev_dbg()</code>, 
+                    and debugfs for runtime debug control</li>
+                <li><strong>Testing frameworks:</strong> Understanding <code>kselftest</code> kernel self-tests, learning to compile and run 
+                    test suites for kernel validation</li>
+                <li><strong>Fuzz testing:</strong> Understanding <code>syzbot</code> reports, reproducing bugs from syzkaller crashes, 
+                    reading and interpreting automated fuzzing results</li>
+            </ul>
+
+            <h2 id="acknowledgments">Acknowledgments</h2>
+            <p>
+                I'm deeply grateful to my mentors—<strong>Shuah Khan</strong> (Maintainer of Kernel Selftest, USB over IP, and cpupower tools), 
+                <strong>David Hunter</strong>, and <strong>Khalid Aziz</strong>—for their unwavering support. 
+                They guided me in engaging with the kernel community, helped me pick the right things to work on, and supported 
+                me through the entire upstreaming process. Their detailed patch reviews, shared upstream experience, and constant 
+                motivation were invaluable. Their flexibility in extending the timeline allowed me to see my patches through to 
+                acceptance.
+            </p>
+
+            <p>
+                Thanks to the maintainers and reviewers who provided valuable feedback: Jonathan Cameron, Krzysztof Kozlowski, 
+                Rob Herring, Andy Shevchenko, David Lechner, Nuno Sá, and Hans Verkuil. Their constructive reviews sharpened 
+                both my code quality and my understanding of kernel development practices. They were incredibly supportive, 
+                welcoming, and patient throughout the review process.
+            </p>
+
+            <p>
+                Thank you to the broader kernel community for maintaining excellent documentation, creating helpful tools, 
+                and welcoming newcomers who show genuine effort.
+            </ul>
+
+            <h2 id="conclusion">Conclusion</h2>
+            <p>
+                The Linux Kernel Fall Unpaid 2025 program (September - November 2025) marked a significant milestone in my journey—
+                transitioning from an individual contributor at organizations to an upstream Linux kernel developer. Contributing 
+                11 patches to the mainline kernel gave me a deeper understanding of how the Linux community operates, from the 
+                rigorous review process to the collaborative spirit that drives development.
+            </p>
+
+            <p>
+                Staying connected through kernel mailing lists keeps me updated on ongoing development and helps me learn from 
+                discussions across subsystems. Having experienced maintainers review and accept my code brought immense confidence 
+                in my abilities as a developer. Most importantly, contributing to a project that has been close to my heart for 
+                years brought tremendous joy and fulfillment.
+            </p>
+
+            <p class="closing">
+                <em>From local repositories to mainline kernel. The journey have just started.</em>
+            </p>
+
+            <p class="closing">Happy hacking! 🐧💚</p>
+
+            <h2 id="resources">Resources</h2>
+            <ul>
+                <li><a href="https://mentorship.lfx.linuxfoundation.org/" target="_blank">LFX Mentorship Portal</a></li>
+                <li><a href="https://kernelnewbies.org/" target="_blank">Kernel Newbies</a></li>
+                <li><a href="https://www.kernel.org/doc/html/latest/" target="_blank">Linux Kernel Documentation</a></li>
+                <li><a href="https://www.kernel.org/doc/html/latest/process/submitting-patches.html" target="_blank">Submitting Patches Guide</a></li>
+                <li><a href="https://lore.kernel.org/" target="_blank">lore.kernel.org - Mailing List Archive</a></li>
+            </ul>
+        </div>
+
+        <div class="post-footer">
+            <div class="tags">
+                <i class="fas fa-tags"></i>
+                <a href="#" class="tag">mentorship</a>
+                <a href="#" class="tag">kernel</a>
+                <a href="#" class="tag">iio</a>
+                <a href="#" class="tag">learning</a>
+                <a href="#" class="tag">open-source</a>
+                <a href="#" class="tag">max30100</a>
+                <a href="#" class="tag">rfd77402</a>
+            </div>
+            <div class="share-section">
+                <p>Share this article</p>
+                <div class="share-buttons">
+                    <a href="#" class="share-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="share-icon"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="share-icon"><i class="fas fa-link"></i></a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <script src="../js/script.js" defer></script>
+    <script src="../js/post.js" defer></script>
+</body>
+</html>

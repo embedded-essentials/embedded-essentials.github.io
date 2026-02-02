@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started with Linux Kernel Development - Embedded Essentials</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-terminal"></i>
+                <span>Embedded Essentials</span>
+            </a>
+            <a href="../index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <article class="post-container">
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="category">Kernel Development</span>
+                <span class="read-time"><i class="fas fa-clock"></i> 8 min read</span>
+            </div>
+            <h1 class="post-title">Getting Started with Linux Kernel Development</h1>
+            <div class="post-info">
+                <div class="author-section">
+                    <div class="author-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="author-details">
+                        <span class="author-name">Kernel Dev</span>
+                        <span class="post-date">January 27, 2026</span>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="like-btn-post" data-post="1">
+                        <i class="far fa-heart"></i>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="share-btn">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="post-featured-image">
+            <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&auto=format&fit=crop" alt="Kernel Development">
+        </div>
+
+        <div class="post-content">
+            <p class="lead">
+                Welcome to the exciting world of Linux kernel development! This comprehensive guide will help you take 
+                your first steps into contributing to one of the largest and most influential open-source projects in the world.
+            </p>
+
+            <h2>Why Contribute to the Linux Kernel?</h2>
+            <p>
+                Contributing to the Linux kernel is an incredible learning experience that offers numerous benefits:
+            </p>
+            <ul>
+                <li><strong>Deep understanding</strong> of how operating systems work at the lowest level</li>
+                <li><strong>Real-world impact</strong> on millions of devices worldwide, from smartphones to supercomputers</li>
+                <li><strong>Professional growth</strong> in systems programming and software engineering</li>
+                <li><strong>Community collaboration</strong> with expert developers from around the globe</li>
+            </ul>
+
+            <h2>Prerequisites</h2>
+            <p>Before diving into kernel development, you should have:</p>
+            <ol>
+                <li>Strong C programming skills</li>
+                <li>Familiarity with Git and version control</li>
+                <li>A Linux development environment</li>
+                <li>Patience and willingness to learn from feedback</li>
+            </ol>
+
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h4>Pro Tip</h4>
+                    <p>Don't be intimidated! Every kernel developer started as a beginner. The community is generally 
+                    welcoming to newcomers who show genuine interest and follow the contribution guidelines.</p>
+                </div>
+            </div>
+
+            <h2>Setting Up Your Development Environment</h2>
+            
+            <h3>1. Install Required Packages</h3>
+            <p>First, install the necessary build tools and dependencies:</p>
+            <pre><code>sudo apt-get update
+sudo apt-get install git build-essential libncurses-dev bison flex \\
+    libssl-dev libelf-dev bc dwarves</code></pre>
+
+            <h3>2. Clone the Linux Kernel Source</h3>
+            <pre><code>git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+cd linux</code></pre>
+
+            <h3>3. Configure the Kernel</h3>
+            <pre><code>make menuconfig</code></pre>
+            <p>This opens an interactive menu where you can configure kernel options. For beginners, the default 
+            configuration is usually sufficient.</p>
+
+            <h3>4. Build the Kernel</h3>
+            <pre><code>make -j$(nproc)</code></pre>
+            <p>The <code>-j$(nproc)</code> flag uses all available CPU cores to speed up compilation. Be patient—this 
+            can take 15-30 minutes depending on your hardware.</p>
+
+            <h2>Understanding the Kernel Source Tree</h2>
+            <p>The Linux kernel source is organized into several key directories:</p>
+            <ul>
+                <li><strong>arch/</strong> - Architecture-specific code (x86, ARM, RISC-V, etc.)</li>
+                <li><strong>drivers/</strong> - Device drivers for various hardware</li>
+                <li><strong>fs/</strong> - Filesystem implementations</li>
+                <li><strong>kernel/</strong> - Core kernel code (scheduling, processes, etc.)</li>
+                <li><strong>mm/</strong> - Memory management subsystem</li>
+                <li><strong>net/</strong> - Network stack</li>
+                <li><strong>include/</strong> - Header files</li>
+            </ul>
+
+            <h2>Writing Your First Kernel Module</h2>
+            <p>Let's create a simple "Hello World" kernel module to get familiar with kernel programming:</p>
+
+            <pre><code>#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Your Name");
+MODULE_DESCRIPTION("A simple Hello World module");
+MODULE_VERSION("0.1");
+
+static int __init hello_init(void) {
+    printk(KERN_INFO "Welcome to Embedded Essentials Blog\\n");
+    return 0;
+}
+
+static void __exit hello_exit(void) {
+    printk(KERN_INFO "Thanks for visiting!\\n");
+}
+
+module_init(hello_init);
+module_exit(hello_exit);</code></pre>
+
+            <h3>Creating a Makefile</h3>
+            <pre><code>obj-m += hello.o
+
+all:
+    make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+    make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean</code></pre>
+
+            <h3>Building and Loading the Module</h3>
+            <pre><code>make
+sudo insmod hello.ko
+dmesg | tail
+sudo rmmod hello
+dmesg | tail</code></pre>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <h4>Warning</h4>
+                    <p>Always be careful when loading kernel modules. A buggy module can crash your system. 
+                    Consider using a virtual machine for testing.</p>
+                </div>
+            </div>
+
+            <h2>Understanding Kernel Coding Style</h2>
+            <p>The Linux kernel has strict coding style guidelines that you must follow:</p>
+            <ul>
+                <li>Use <strong>tabs</strong> for indentation (8 characters wide)</li>
+                <li>Lines should be <strong>80 characters</strong> or less</li>
+                <li>Use <strong>K&R style</strong> for braces</li>
+                <li>Follow naming conventions (lowercase with underscores)</li>
+            </ul>
+
+            <p>Check your code with the kernel's style checker:</p>
+            <pre><code>scripts/checkpatch.pl --file your_file.c</code></pre>
+
+            <h2>Finding Your First Task</h2>
+            
+            <h3>1. Kernel Newbies</h3>
+            <p>Visit <a href="https://kernelnewbies.org/" target="_blank">kernelnewbies.org</a> for beginner-friendly 
+            tasks and resources.</p>
+
+            <h3>2. Staging Drivers</h3>
+            <p>The <code>drivers/staging/</code> directory contains code that needs cleanup:</p>
+            <pre><code>cd drivers/staging
+grep -r "TODO" .</code></pre>
+
+            <h3>3. Fix Coding Style Issues</h3>
+            <p>Run checkpatch on staging drivers to find easy fixes:</p>
+            <pre><code>./scripts/checkpatch.pl -f drivers/staging/some_driver/file.c</code></pre>
+
+            <h2>The Patch Submission Process</h2>
+            
+            <h3>1. Create Your Changes</h3>
+            <pre><code>git checkout -b my-feature-branch
+# Make your changes
+git add modified_file.c
+git commit -s</code></pre>
+
+            <p>The <code>-s</code> flag adds your Signed-off-by line, which is required for all kernel patches.</p>
+
+            <h3>2. Generate a Patch</h3>
+            <pre><code>git format-patch -1</code></pre>
+
+            <h3>3. Check Your Patch</h3>
+            <pre><code>./scripts/checkpatch.pl 0001-your-patch.patch</code></pre>
+
+            <h3>4. Find the Right Maintainer</h3>
+            <pre><code>./scripts/get_maintainer.pl 0001-your-patch.patch</code></pre>
+
+            <h3>5. Send the Patch</h3>
+            <pre><code>git send-email --to=maintainer@email.com \\
+    --cc=mailing-list@kernel.org \\
+    0001-your-patch.patch</code></pre>
+
+            <h2>Common Pitfalls to Avoid</h2>
+            <ol>
+                <li><strong>Not reading documentation</strong> - Always check the Documentation/ directory</li>
+                <li><strong>Ignoring coding style</strong> - Run checkpatch.pl before submitting</li>
+                <li><strong>Not testing</strong> - Test your changes thoroughly</li>
+                <li><strong>Poor commit messages</strong> - Write clear, descriptive commit messages</li>
+                <li><strong>Wrong maintainer</strong> - Use get_maintainer.pl to find the right person</li>
+            </ol>
+
+            <h2>Useful Resources</h2>
+            <ul>
+                <li><a href="https://www.kernel.org/doc/html/latest/" target="_blank">Linux Kernel Documentation</a></li>
+                <li><a href="https://kernelnewbies.org/" target="_blank">Kernel Newbies</a></li>
+                <li>Linux Device Drivers (Book) - Classic resource</li>
+                <li>kernel-janitors Mailing List - Great place for beginners</li>
+                <li>#kernelnewbies IRC - IRC channel for help</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            <p>
+                Starting kernel development can be intimidating, but with persistence and the right resources, anyone can 
+                contribute. Start small, ask questions, and don't be discouraged by initial rejections—even experienced 
+                developers have their patches rejected!
+            </p>
+            <p>
+                Remember: Every kernel developer started exactly where you are now. The journey of a thousand commits 
+                begins with a single patch.
+            </p>
+            <p class="closing">Happy hacking! 🐧</p>
+        </div>
+
+        <div class="post-footer">
+            <div class="tags">
+                <i class="fas fa-tags"></i>
+                <a href="#" class="tag">kernel</a>
+                <a href="#" class="tag">development</a>
+                <a href="#" class="tag">beginner</a>
+                <a href="#" class="tag">tutorial</a>
+            </div>
+            <div class="share-section">
+                <p>Share this article</p>
+                <div class="share-buttons">
+                    <a href="#" class="share-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="share-icon"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="share-icon"><i class="fas fa-link"></i></a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/post.js"></script>
+</body>
+</html>
