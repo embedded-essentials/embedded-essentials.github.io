@@ -1,8 +1,5 @@
 // Post page specific JavaScript
 
-// CountAPI Configuration
-const COUNTAPI_NAMESPACE = 'embedded-essentials.github.io'; // Change this to your domain
-
 // Track page visitors using CountAPI
 async function trackPageVisitors(pageId) {
     try {
@@ -57,38 +54,68 @@ async function handleLike(pageId) {
     const likeCount = document.querySelector('.like-count');
     const icon = likeBtn ? likeBtn.querySelector('i') : null;
     
+    console.log('========================================');
+    console.log('🔥 LIKE BUTTON CLICKED');
+    console.log('Page ID:', pageId);
+    console.log('Like key:', likeKey);
+    console.log('Like button element:', likeBtn);
+    console.log('Like count element:', likeCount);
+    console.log('Icon element:', icon);
+    
     // Check if user already liked
-    if (localStorage.getItem(likeKey)) {
-        showToast('You already liked this post!');
-        return;
-    }
+    const alreadyLiked = localStorage.getItem(likeKey);
+    console.log('Already liked (from localStorage):', alreadyLiked);
+    
+    if (alreadyLiked) {
+         console.log('⚠️ User already liked this post - showing toast and exiting');
+         showToast('You already liked this post!');
+         return;
+     }
     
     try {
+        const apiUrl = `https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${pageId}/likes`;
+        console.log('📡 Sending like request to CountAPI...');
+        console.log('API URL:', apiUrl);
+   
         // Increment like counter on CountAPI
-        const response = await fetch(`https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${pageId}/likes`);
-        const data = await response.json();
+        const response = await fetch(apiUrl);
+        console.log('Response status:', response.status, response.statusText);
+        
+         if (!response.ok) {
+             throw new Error(`HTTP error! status: ${response.status}`);
+         }
+         const data = await response.json();
+        console.log('✅ Like registered successfully!');
+        console.log('Response data:', data);
+        console.log('New like count:', data.value);
         
         // Update UI with new count
         if (likeCount) {
+            const oldCount = likeCount.textContent;
             likeCount.textContent = data.value;
+            console.log('Updated like count:', oldCount, '→', data.value);
         }
         
         // Mark as liked in localStorage
         localStorage.setItem(likeKey, 'true');
+        console.log('Saved to localStorage:', likeKey, '= true');
         
         // Update button state
         if (likeBtn) {
             likeBtn.classList.add('liked');
             likeBtn.disabled = true;
+            console.log('Button disabled and marked as liked');
         }
         if (icon) {
             icon.classList.remove('far');
             icon.classList.add('fas');
+             console.log('Icon changed from far to fas');
         }
         
         // Create celebration effect
         if (likeBtn) {
             createLikeExplosion(likeBtn);
+            console.log('Creating like explosion effect...');
         }
         
         // Add animation
@@ -97,13 +124,20 @@ async function handleLike(pageId) {
             setTimeout(() => {
                 likeBtn.style.transform = 'scale(1)';
             }, 200);
+            console.log('Added scale animation');
         }
         
         showToast('Thanks for liking this post! ❤️');
+        console.log('✅ Like process completed successfully');
+        console.log('========================================');
         
     } catch (error) {
-        console.error('Failed to register like:', error);
+        console.error('❌ LIKE FAILED');
+        console.error('Error details:', error);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
         showToast('Failed to register like. Please try again.');
+        console.log('========================================');
     }
 }
 
