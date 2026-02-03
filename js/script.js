@@ -1,14 +1,11 @@
-// CountAPI Configuration
-const COUNTAPI_NAMESPACE = 'embedded-essentials.github.io'; // Change to your domain
-const BLOG_POST_IDS = ['mentorship']; // Add more blog post IDs as you create them
+// Blog Configuration
+const BLOG_POST_IDS = ['mentorship']; // Add more blog post IDS as you create them
 
-// Track homepage visitors using CountAPI
+// Track homepage visitors using Firebase
 async function trackHomepageVisitors() {
     try {
-        const response = await fetch(`https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/homepage/visits`);
-        const data = await response.json();
-        
-        // Homepage visit tracked
+        const count = await FirebaseCounters.increment('counters/homepage-visits');
+        console.log('Homepage visit tracked:', count);
     } catch (error) {
         console.error('Failed to track homepage visit:', error);
     }
@@ -19,19 +16,27 @@ async function loadAggregateStats() {
     let totalLikes = 0;
     let totalViews = 0;
     
+    console.log('📊 Loading aggregate stats...');
+    console.log('Blog post IDs:', BLOG_POST_IDS);
+    
     try {
         // Fetch stats from all blog posts
         for (const blogId of BLOG_POST_IDS) {
             // Fetch likes
-            const likesResponse = await fetch(`https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/${blogId}/likes`);
-            const likesData = await likesResponse.json();
-            totalLikes += likesData.value || 0;
+            const likesPath = `counters/posts/${blogId}/likes`;
+            const likes = await FirebaseCounters.get(likesPath);
+            console.log(`${blogId} likes:`, likes);
+            totalLikes += likes;
             
             // Fetch views
-            const viewsResponse = await fetch(`https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/${blogId}/visits`);
-            const viewsData = await viewsResponse.json();
-            totalViews += viewsData.value || 0;
+            const viewsPath = `counters/posts/${blogId}/views`;
+            const views = await FirebaseCounters.get(viewsPath);
+            console.log(`${blogId} views:`, views);
+            totalViews += views;
         }
+        
+        console.log('Total Likes:', totalLikes);
+        console.log('Total Views:', totalViews);
         
         // Animate counters
         animateCounter('total-likes', totalLikes);
@@ -105,14 +110,11 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Like Button Functionality (deprecated - kept for backward compatibility)
-// New blog posts use CountAPI in post.js
+// Like Button Functionality for blog cards on homepage
 function initLikeButtons() {
-    const LIKES_KEY = 'blog_post_likes';
     const USER_LIKES_KEY = 'blog_user_likes';
     
-    // Get all likes and user's liked posts
-    let allLikes = JSON.parse(localStorage.getItem(LIKES_KEY) || '{}');
+    // Get user's liked posts from localStorage
     let userLikes = JSON.parse(localStorage.getItem(USER_LIKES_KEY) || '[]');
     
     // Initialize like buttons
@@ -121,9 +123,8 @@ function initLikeButtons() {
         const likeCount = btn.querySelector('.like-count');
         const icon = btn.querySelector('i');
         
-        // Set initial like count
-        const count = allLikes[postId] || 0;
-        likeCount.textContent = count;
+        // Load current like count from Firebase
+        loadCardLikeCount(postId, likeCount);
         
         // Check if user has liked this post
         if (userLikes.includes(postId)) {
@@ -133,49 +134,64 @@ function initLikeButtons() {
         }
         
         // Add click handler
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation(); // Prevent card click
             const isLiked = userLikes.includes(postId);
             
             if (isLiked) {
-                // Unlike
-                userLikes = userLikes.filter(id => id !== postId);
-                allLikes[postId] = Math.max(0, (allLikes[postId] || 0) - 1);
-                btn.classList.remove('liked');
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-            } else {
-                // Like
+                showToast('You already liked this post!');
+                return;
+            }
+            
+            try {
+                // Like - increment on Firebase
+                const newCount = await FirebaseCounters.increment(`counters/posts/${postId}/likes`);
+                
+                // Update display
+                likeCount.textContent = newCount;
+                
+                // Mark as liked locally
                 userLikes.push(postId);
-                allLikes[postId] = (allLikes[postId] || 0) + 1;
+                localStorage.setItem(USER_LIKES_KEY, JSON.stringify(userLikes));
+                
                 btn.classList.add('liked');
                 icon.classList.remove('far');
                 icon.classList.add('fas');
                 
                 // Create heart animation
                 createHeartAnimation(btn);
+                
+                // Update total likes
+                loadAggregateStats();
+                
+                showToast('Thanks for liking! ❤️');
+            } catch (error) {
+                console.error('Failed to like post:', error);
+                showToast('Failed to register like. Please try again.');
             }
-            
-            // Update display
-            likeCount.textContent = allLikes[postId];
-            
-            // Save to localStorage
-            localStorage.setItem(LIKES_KEY, JSON.stringify(allLikes));
-            localStorage.setItem(USER_LIKES_KEY, JSON.stringify(userLikes));
-            
-            // Update total likes
-            updateTotalLikes();
         });
     });
-    
-    // Update total likes counter
-    updateTotalLikes();
+}
+
+// Load like count for a specific blog card
+async function loadCardLikeCount(postId, likeCountElement) {
+    try {
+        const count = await FirebaseCounters.get(`counters/posts/${postId}/likes`);
+        
+        if (likeCountElement) {
+            likeCountElement.textContent = count;
+        }
+    } catch (error) {
+        console.error('Failed to load like count for', postId, error);
+        if (likeCountElement) {
+            likeCountElement.textContent = '0';
+        }
+    }
 }
 
 function updateTotalLikes() {
-    const LIKES_KEY = 'blog_post_likes';
-    const allLikes = JSON.parse(localStorage.getItem(LIKES_KEY) || '{}');
-    const total = Object.values(allLikes).reduce((sum, count) => sum + count, 0);
-    animateCounter('total-likes', total);
+    // This is now handled by loadAggregateStats()
+    loadAggregateStats();
 }
 
 function createHeartAnimation(button) {
@@ -198,6 +214,32 @@ function createHeartAnimation(button) {
     setTimeout(() => heart.remove(), 1000);
 }
 
+// Show toast notification
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        padding: 1rem 1.5rem;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
+        border: 1px solid var(--border-color);
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
 // Add heart animation CSS
 const style = document.createElement('style');
 style.textContent = `
@@ -208,6 +250,28 @@ style.textContent = `
         }
         100% {
             transform: translateY(-50px) scale(1.5);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
             opacity: 0;
         }
     }
@@ -315,13 +379,17 @@ document.querySelectorAll('.stat-card').forEach(card => {
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Track homepage visit
-    trackHomepageVisitors();
+    // Wait a bit for Firebase to initialize
+    setTimeout(async () => {
+        // Track homepage visit
+        await trackHomepageVisitors();
+        
+        // Load aggregate stats from all blog posts
+        await loadAggregateStats();
+        
+        initLikeButtons();
+    }, 500);
     
-    // Load aggregate stats from all blog posts
-    loadAggregateStats();
-    
-    initLikeButtons();
     createParticles();
     
     // Add loading animation

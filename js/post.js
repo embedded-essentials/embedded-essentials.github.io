@@ -1,30 +1,28 @@
 // Post page specific JavaScript
 
-// Track page visitors using CountAPI
+// Track page visitors using Firebase
 async function trackPageVisitors(pageId) {
     try {
-        const response = await fetch(`https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${pageId}/visits`);
-        const data = await response.json();
+        const count = await FirebaseCounters.increment(`counters/posts/${pageId}/views`);
         
         // Update visitor count in UI
         const visitorCount = document.getElementById('visitor-count');
         if (visitorCount) {
-            visitorCount.textContent = data.value || 0;
+            visitorCount.textContent = count;
         }
     } catch (error) {
         console.error('Failed to track page visit:', error);
     }
 }
 
-// Load current like count from CountAPI
+// Load current like count from Firebase
 async function loadLikeCount(pageId) {
     try {
-        const response = await fetch(`https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/${pageId}/likes`);
-        const data = await response.json();
+        const count = await FirebaseCounters.get(`counters/posts/${pageId}/likes`);
         
         const likeCount = document.querySelector('.like-count');
         if (likeCount) {
-            likeCount.textContent = data.value || 0;
+            likeCount.textContent = count;
         }
         
         // Check if user already liked (localStorage)
@@ -73,27 +71,18 @@ async function handleLike(pageId) {
      }
     
     try {
-        const apiUrl = `https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${pageId}/likes`;
-        console.log('📡 Sending like request to CountAPI...');
-        console.log('API URL:', apiUrl);
+        console.log('📡 Sending like request to Firebase...');
    
-        // Increment like counter on CountAPI
-        const response = await fetch(apiUrl);
-        console.log('Response status:', response.status, response.statusText);
-        
-         if (!response.ok) {
-             throw new Error(`HTTP error! status: ${response.status}`);
-         }
-         const data = await response.json();
+        // Increment like counter on Firebase
+        const newCount = await FirebaseCounters.increment(`counters/posts/${pageId}/likes`);
         console.log('✅ Like registered successfully!');
-        console.log('Response data:', data);
-        console.log('New like count:', data.value);
+        console.log('New like count:', newCount);
         
         // Update UI with new count
         if (likeCount) {
             const oldCount = likeCount.textContent;
-            likeCount.textContent = data.value;
-            console.log('Updated like count:', oldCount, '→', data.value);
+            likeCount.textContent = newCount;
+            console.log('Updated like count:', oldCount, '→', newCount);
         }
         
         // Mark as liked in localStorage
